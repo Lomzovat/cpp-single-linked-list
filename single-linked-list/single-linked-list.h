@@ -70,6 +70,7 @@ class SingleLinkedList {
         }
 
         BasicIterator& operator++() noexcept {
+            assert(node_ != nullptr);
             node_ = node_->next_node;
             return *this;
         }
@@ -81,25 +82,19 @@ class SingleLinkedList {
         }
 
         [[nodiscard]] reference operator*() const noexcept {
+            assert(node_ != nullptr);
             return node_->value;
         }
 
         [[nodiscard]] pointer operator->() const noexcept {
-            if (node_) {
-                return &node_->value;
-            }
-            else {
-                return nullptr;
-            }
+            assert(node_ != nullptr);
+            return &node_->value;
         }
+        
 
     private:
         Node* node_ = nullptr;
     };
-
-public:
-
-    SingleLinkedList() {}
 
     template <typename T>
     void Initialization(T begin, T end) {
@@ -110,6 +105,11 @@ public:
             node = node->next_node;
         }
     }
+
+public:
+
+    SingleLinkedList() {}
+        
 
     SingleLinkedList(std::initializer_list<Type> values) {
         SingleLinkedList temp;
@@ -185,11 +185,9 @@ public:
     }
 
     [[nodiscard]] bool IsEmpty() const noexcept {
-        if (!size_) {
-            return true;
-        }
-        return false;
+        return size_ == 0;
     }
+
 
     void PushFront(const Type& value) {
         head_.next_node = new Node(value, head_.next_node);
@@ -253,7 +251,8 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    return std::equal(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    return (lhs.GetSize() == rhs.GetSize() && std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin()
+    ));
 }
 
 template <typename Type>
